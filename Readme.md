@@ -19,4 +19,3 @@ Best database to be used for storage, i.e, Excel Sheets💀
 <br>
 <br>
 <br>
-Made with ❤️ by Parth Sundarka!
