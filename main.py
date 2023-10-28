@@ -5,8 +5,9 @@ import cv2
 import face_recognition
 import cvzone
 import numpy as np
+from deepface import DeepFace
 
-cap = cv2.VideoCapture(1)
+cap = cv2.VideoCapture(0)
 cap.set(3, 640)
 cap.set(4, 480)
 
@@ -34,13 +35,13 @@ counter = 0
 id = -1
 imgStudent = []
 studentInfo = {
-                    "total_attendance" : "total",
-                    "major" : "major",
-                    "standing" : "standing",
-                    "year" : "year",
-                    "starting_year" : "starting_year",
-                    "name" : "name"
-                }
+    "total_attendance": "total",
+    "major": "major",
+    "standing": "standing",
+    "year": "year",
+    "starting_year": "starting_year",
+    "name": "name"
+}
 while True:
     success, img = cap.read()
 
@@ -75,10 +76,14 @@ while True:
                     cvzone.putTextRect(imgBackground, "Loading", (275, 400))
                     imgStudent = cv2.imread("Images/" + studentIds[matchIndex] + ".png")
                     imgStudent = cv2.resize(imgStudent, (216, 216))
+                    result = DeepFace.analyze(img, actions=['emotion'], enforce_detection=False)
+                    print(result[0]['dominant_emotion'])
                     cv2.imshow("Face Attendance", imgBackground)
                     cv2.waitKey(1)
                     counter = 1
                     modeType = 1
+            else:
+                modeType = 1
 
         if counter != 0:
             if counter == 1:
@@ -107,12 +112,12 @@ while True:
 
             if modeType != 3:
 
-                if 10 < counter < 20:
-                    modeType = 2
+                # if 10 < counter < 20:
+                #     modeType = 2
 
                 imgBackground[44:44 + 633, 808:808 + 414] = imgModeList[modeType]
 
-                if counter <= 10:
+                if True:
                     # cv2.putText(imgBackground, str(studentInfo['total_attendance']), (861, 125),
                     #             cv2.FONT_HERSHEY_COMPLEX, 1, (255, 255, 255), 1)
                     cv2.putText(imgBackground, str(studentInfo['major']), (1006, 550),
@@ -135,15 +140,16 @@ while True:
 
                 counter += 1
 
-                if counter >= 20:
-                    counter = 0
-                    modeType = 0
-                    studentInfo = []
-                    imgStudent = []
-                    imgBackground[44:44 + 633, 808:808 + 414] = imgModeList[modeType]
+                # if counter >= 20:
+                #     counter = 0
+                #     modeType = 0
+                #     studentInfo = []
+                #     imgStudent = []
+                #     imgBackground[44:44 + 633, 808:808 + 414] = imgModeList[modeType]
     else:
-        modeType = 0
-        counter = 0
+        pass
+        # modeType = 0
+        # counter = 0
     # cv2.imshow("Webcam", img)
     cv2.imshow("Face Attendance", imgBackground)
     cv2.waitKey(1)
